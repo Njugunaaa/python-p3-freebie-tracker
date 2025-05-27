@@ -1,30 +1,20 @@
-#!/usr/bin/env python3
-
-# Script goes here!
-# seed.py
-from mydatabase import session, Base, engine
+from sqlalchemy.orm import sessionmaker
 from models import Company, Dev, Freebie
+from sqlalchemy import create_engine
 
-# Drop and recreate tables
-Base.metadata.drop_all(engine)
-Base.metadata.create_all(engine)
+engine = create_engine("sqlite:///freebies.db")
+Session = sessionmaker(bind=engine)
+session = Session()
 
-# Create companies
-google = Company(name="Google", founding_year=1998)
-apple = Company(name="Apple", founding_year=1976)
+company1 = Company(name="Google", founding_year=1998)
+company2 = Company(name="Apple", founding_year=1976)
 
-# Create devs
-alice = Dev(name="Alice")
-bob = Dev(name="Bob")
+dev1 = Dev(name="Njuguna")
+dev2 = Dev(name="Kimani")
 
-# Add to session and commit
-session.add_all([google, apple, alice, bob])
-session.commit()
+freebie1 = Freebie(item_name="Sticker", value=1, company=c1, dev=d1)
+freebie2 = Freebie(item_name="T-Shirt", value=10, company=c2, dev=d1)
+freebie3 = Freebie(item_name="Mug", value=5, company=c1, dev=d2)
 
-# Create freebies
-freebie1 = google.give_freebie(alice, "Tote Bag", 10)
-freebie2 = apple.give_freebie(bob, "Sticker", 2)
-freebie3 = google.give_freebie(bob, "Water Bottle", 5)
-
-session.add_all([freebie1, freebie2, freebie3])
+session.add_all([company1, company2, dev1, dev2, freebie1 , freebie2, freebie3])
 session.commit()
